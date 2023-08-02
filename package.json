@@ -1,0 +1,24 @@
+{
+  "name": "notevault",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VedantPol/NoteVault.git"
+  },
+  "author": "Vedant Pol",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VedantPol/NoteVault/issues"
+  },
+  "homepage": "https://github.com/VedantPol/NoteVault#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1"
+  }
+}
