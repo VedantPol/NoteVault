@@ -8,7 +8,6 @@ import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
 
-
 const ProfileScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -16,41 +15,58 @@ const ProfileScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [picMessage, setPicMessage] = useState();
-
-    const postDetails = (pics) => {
-      setPicMessage(null);
-      if (pics.type === "image/jpeg" || pics.type === "image/png") {
-        const data = new FormData();
-        data.append("file", pics);
-        data.append("upload_preset", "notezipper");
-        data.append("cloud_name", "piyushproj");
-        fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
-          method: "post",
-          body: data,
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setPic(data.url.toString());
-            console.log(pic);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        return setPicMessage("Please Select an Image");
-      }
-    };
+  const history = useNavigate();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const dispatch = useDispatch();
-  const userLogin = useSelector((state) => state.userLogin);
+
   const userUpdate = useSelector((state) => state.userUpdate);
   const { loading, error, success } = userUpdate;
+  const postDetails = (pics) => {
+    setPicMessage(null);
+    if (pics.type === "image/jpeg" || pics.type === "image/png") {
+      const data = new FormData();
+      data.append("file", pics);
+      data.append("upload_preset", "noteVault");
+      data.append("cloud_name", "dt0bjp31c");
+      fetch("https://api.cloudinary.com/v1_1/dt0bjp31c/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setPic(data.url.toString());
+          console.log(pic);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      return setPicMessage("Please Select an Image");
+    }
+  };
+
+  useEffect(() => {
+    if (!userInfo) {
+      history("/");
+    } else {
+      setName(userInfo.name);
+      setEmail(userInfo.email);
+      setPic(userInfo.pic);
+    }
+  }, [userInfo]);
+    const submitHandler = (e) => {
+      e.preventDefault();
+
+      dispatch(updateProfile({ name, email, password, pic }));
+    };
   return (
     <MainScreen title="EDIT PROFILE">
       <div>
         <Row className="profileContainer">
           <Col md={6}>
-            <Form>
+            <Form onSubmit={submitHandler}>
               {loading && <Loading />}
               {success && (
                 <ErrorMessage variant="success">
@@ -94,15 +110,13 @@ const ProfileScreen = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 ></Form.Control>
               </Form.Group>{" "}
-
               {picMessage && (
                 <ErrorMessage variant="danger">{picMessage}</ErrorMessage>
               )}
-
               <Form.Group controlId="pic">
                 <Form.Label>Change Profile Picture</Form.Label>
                 <Form.Control
-                    onChange={(e) => postDetails(e.target.files[0])}
+                  onChange={(e) => postDetails(e.target.files[0])}
                   type="file"
                   label="Upload Profile Picture"
                   custom
