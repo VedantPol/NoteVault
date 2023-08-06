@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import MainScreen from "../../components/MainScreen";
 import "./RegisterScreen.css";
+import { register } from "../../actions/userActions";
+
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -18,8 +19,17 @@ const RegisterPage = () => {
   const [confirmpassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [picMessage, setPicMessage] = useState(null);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const userRegister = useSelector((state)=>state.userRegister);
+  const {loading,error,userInfo}= userRegister;
+
+    const history = useNavigate();
+    useEffect(() => {
+      if (userInfo) {
+        history("/mynotes");
+      }
+    }, [userInfo]);
+
 
 //   const postDetails = () => {
 //     if (
@@ -79,30 +89,13 @@ const RegisterPage = () => {
 
   const submitHandler = async(e) => {
     e.preventDefault();
-
-    if (password !== confirmpassword) {
-      setMessage("passwords Do Not Match");
-    } else {
-      setMessage(null);
-      try {
-        const config ={
-            headers:{
-                "Content-type": "application/json",
-            },
-        };
-        setLoading(true);
-        const {data} = await axios.post(
-            "/api/users",
-            {name,pic,email,password},
-            config
-        );
-        setLoading(false);
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        
-      } catch (error) {
-        setError(error.response.data.message)
-      }
+    if(password!==confirmpassword){
+      setMessage('passwords do no match');
     }
+    else{
+      dispatch(register(name,email,password,pic))
+    }
+
   };
   return (
     <MainScreen title="REGISTER">

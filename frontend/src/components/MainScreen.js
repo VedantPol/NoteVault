@@ -1,6 +1,8 @@
+import React from "react";
 import { Container, Row } from "react-bootstrap";
 import "./MainScreen.css";
-const MainScreen = ({ children, title }) => {
+
+function MainScreen({ children, title }) {
   return (
     <div className="mainback">
       <Container>
@@ -9,7 +11,7 @@ const MainScreen = ({ children, title }) => {
             {title && (
               <>
                 <h1 className="heading">{title}</h1>
-                <hr></hr>
+                <hr />
               </>
             )}
             {children}
@@ -18,6 +20,6 @@ const MainScreen = ({ children, title }) => {
       </Container>
     </div>
   );
-};
+}
 
 export default MainScreen;

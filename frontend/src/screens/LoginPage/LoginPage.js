@@ -9,7 +9,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
 
-const LoginPage = () => {
+function LoginPage(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const LoginPage = () => {
     if (userInfo) {
       history('/mynotes');
     }
-  }, [history, userInfo]);
+  }, [userInfo]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
